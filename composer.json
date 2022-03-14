@@ -1,0 +1,15 @@
+{
+    "name": "krystian/imageeditor",
+    "autoload": {
+        "psr-4": {
+            "Krystian\\Imageeditor\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Krystian Kordal",
+            "email": "34897885+Kaerv@users.noreply.github.com"
+        }
+    ],
+    "require": {}
+}
