@@ -1,14 +1,14 @@
 {
-    "name": "krystian/imageeditor",
+    "name": "kordal/imageeditor",
     "autoload": {
         "psr-4": {
-            "Krystian\\Imageeditor\\": "src/"
+            "Kordal\\ImageEditor\\": "src/"
         }
     },
     "authors": [
         {
             "name": "Krystian Kordal",
-            "email": "34897885+Kaerv@users.noreply.github.com"
+            "email": "k.kordal10@gmail.com"
         }
     ],
     "require": {}
