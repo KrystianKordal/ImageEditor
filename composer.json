@@ -11,5 +11,7 @@
             "email": "k.kordal10@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php-amqplib/php-amqplib": "^3.2"
+    }
 }
