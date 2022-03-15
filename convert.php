@@ -26,9 +26,19 @@ $channel->queue_declare(
     $ticket = null
 );
 
-$data = array(
-    'image_path' => __DIR__ . '/img/image.jpg'
-);
+$images = [
+    array('path' => __DIR__ . '/img/image1.jpg'),
+    array('path' => __DIR__ . '/img/car.jpg'),
+    array('path' => __DIR__ . '/img/fish.jpg'),
+    array('path' => __DIR__ . '/img/mountains.jpg'),
+];
 
-$msg = new AMQPMessage(json_encode($data));
-$channel->basic_publish($msg, '', RABBITMQ_QUEUE_NAME);
+foreach ($images as $image) {
+    $data = array(
+        'image_path' => $image['path']
+    );
+    
+    $msg = new AMQPMessage(json_encode($data));
+    $channel->basic_publish($msg, '', RABBITMQ_QUEUE_NAME);
+}
+

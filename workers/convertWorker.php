@@ -21,10 +21,12 @@ $callback = function($msg) {
     $image_path = $data['image_path'];
 
     if (file_exists($image_path)) {
-        echo "> Converting image " . pathinfo($image_path, PATHINFO_BASENAME) . "\n";
+        echo "> Converting " . pathinfo($image_path, PATHINFO_BASENAME) . "\n";
+        $start = microtime(true);
         $converter = new WebpConverter();
         $converter->convert($image_path);
-        echo "> Image converted \n";
+        $end = round((microtime(true) - $start) * 100) / 100;
+        echo "> Image converted after " . $end . "s \n\n";
     } else {
         echo "> File doesnt exists \n";
     }
