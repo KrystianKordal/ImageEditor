@@ -18,13 +18,14 @@ $callback = function($msg) {
     $data = json_decode($msg->body, true);
     echo "> Received message \n";
     
-    $image_path = $data['image_path'];
+    $source = $data['source'];
+    $destination = $data['destination'];
 
-    if (file_exists($image_path)) {
-        echo "> Converting " . pathinfo($image_path, PATHINFO_BASENAME) . "\n";
+    if (file_exists($source)) {
+        echo "> Converting " . pathinfo($source, PATHINFO_BASENAME) . "\n";
         $start = microtime(true);
         $converter = new WebpConverter();
-        $converter->convert($image_path);
+        $converter->convert($source, $destination);
         $end = round((microtime(true) - $start) * 100) / 100;
         echo "> Image converted after " . $end . "s \n\n";
     } else {

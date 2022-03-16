@@ -1,5 +1,6 @@
 <?php
 
+use Kordal\ImageEditor\File;
 use Kordal\ImageEditor\WebpConverter;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -26,16 +27,12 @@ $channel->queue_declare(
     $ticket = null
 );
 
-$images = [
-    array('path' => __DIR__ . '/img/image1.jpg'),
-    array('path' => __DIR__ . '/img/car.jpg'),
-    array('path' => __DIR__ . '/img/fish.jpg'),
-    array('path' => __DIR__ . '/img/mountains.jpg'),
-];
+$images = File::getImagesFromDir('images');
 
 foreach ($images as $image) {
     $data = array(
-        'image_path' => $image['path']
+        'source' => $image['source'],
+        'destination' => $image['destination']
     );
     
     $msg = new AMQPMessage(json_encode($data));
