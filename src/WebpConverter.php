@@ -3,7 +3,7 @@
 namespace Kordal\ImageEditor;
 
 /**
- * Converts image to webp
+ * Used for converting images to webp
  */
 class WebpConverter
 {
@@ -12,7 +12,14 @@ class WebpConverter
         $this->quality = 100;
     }
 
-    public function convert($source)
+    /**
+     * Convert image to webp
+     * 
+     * @param string $source absolutive path to image
+     * 
+     * @return string New file destination
+     */
+    public function convert($source) : string
     {
         $dir = pathinfo($source, PATHINFO_DIRNAME);
         $name = pathinfo($source, PATHINFO_FILENAME);
