@@ -12,6 +12,7 @@
         }
     ],
     "require": {
-        "php-amqplib/php-amqplib": "^3.2"
+        "php-amqplib/php-amqplib": "^3.2",
+        "nelexa/zip": "^4.0"
     }
 }

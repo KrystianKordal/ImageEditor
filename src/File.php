@@ -11,6 +11,7 @@ class File
      * Get all images from directory
      * 
      * @param string $path Path to directory
+     * @param strin $main_path Path to parent directory
      * 
      * @return array Images data
      * [
@@ -20,10 +21,11 @@ class File
      *  ]
      * ]
      */
-    public static function getImagesFromDir(string $path) : array
+    public static function getImagesFromDir(string $path, $main_path = null) : array
     {
-        $path = self::makeAbsolutePath($path, UPLOAD_DIR);
-
+        if (!$main_path) {
+            $main_path = $path;
+        }
         $nodes = scandir($path);
 
         $images_paths = array();
@@ -35,13 +37,15 @@ class File
             $node_path = $path . DIRECTORY_SEPARATOR . $node;
 
             if(is_dir($node_path)) {
-                $images_paths = array_merge($images_paths, self::getImagesFromDir($node_path));
+                $images_paths = array_merge($images_paths, self::getImagesFromDir($node_path, $main_path));
             }
 
             if(self::isImage($node_path)) {
+                $destination = self::setWebpExtension($node_path);
+                $destination = str_replace($main_path, DOWNLOAD_DIR, $destination);
                 $images_paths[] = array(
                     'source' => $node_path,
-                    'destination' => str_replace(UPLOAD_DIR, DOWNLOAD_DIR, self::setWebpExtension($node_path))
+                    'destination' => $destination
                 );
             }
         }
@@ -89,34 +93,47 @@ class File
     }
 
     /**
-     * Change path from relative to absolute
-     * 
-     * @param string $path Relative or absolute path
-     * @param string $parent_path Absolute path to parent
-     * 
-     * @return string Absolute path
-     */
-    public static function makeAbsolutePath(string $path, string $parent_path)
-    {
-        if (strpos($path, $parent_path) === false) {
-            $last_char = substr($parent_path, -1);
-
-            if ($last_char != DIRECTORY_SEPARATOR) {
-                $parent_path .= DIRECTORY_SEPARATOR;
-            }
-
-            return $parent_path . $path;
-        }
-
-        return $path;
-    }
-
-    /**
      * Create dir
      */
     public static function createDir($dir)
     {
         mkdir($dir, 0755, true);
+    }
+
+    /**
+     * Create dir in temp directory
+     * 
+     * @return string|bool
+     */
+    public static function createTempDir($dir = null, $prefix = 'tmp_', $mode = 0700, $maxAttempts = 1000)
+    {
+        if (is_null($dir))
+        {
+            $dir = sys_get_temp_dir();
+        }
+    
+        $dir = rtrim($dir, DIRECTORY_SEPARATOR);
+    
+        if (!is_dir($dir) || !is_writable($dir))
+        {
+            return false;
+        }
+    
+        if (strpbrk($prefix, '\\/:*?"<>|') !== false)
+        {
+            return false;
+        }
+    
+        $attempts = 0;
+        do
+        {
+            $path = sprintf('%s%s%s%s', $dir, DIRECTORY_SEPARATOR, $prefix, mt_rand(100000, mt_getrandmax()));
+        } while (
+            !mkdir($path, $mode) &&
+            $attempts++ < $maxAttempts
+        );
+    
+        return $path;
     }
 
 }

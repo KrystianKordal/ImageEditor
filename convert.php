@@ -27,15 +27,31 @@ $channel->queue_declare(
     $ticket = null
 );
 
-$images = File::getImagesFromDir('images');
+$upload_path = UPLOAD_DIR . 'images/image.zip';
 
-foreach ($images as $image) {
-    $data = array(
-        'source' => $image['source'],
-        'destination' => $image['destination']
-    );
+$temp_dir = File::createTempDir();
+
+if($temp_dir) {
+    $zipFile = new PhpZip\ZipFile();
+    $zipFile
+        ->openFile($upload_path)
+        ->extractTo($temp_dir)
+        ->close();
+
+
+    $images = File::getImagesFromDir($temp_dir);
     
-    $msg = new AMQPMessage(json_encode($data));
-    $channel->basic_publish($msg, '', RABBITMQ_QUEUE_NAME);
+    foreach ($images as $image) {
+        $data = array(
+            'source' => $image['source'],
+            'destination' => $image['destination']
+        );
+        
+        $msg = new AMQPMessage(json_encode($data));
+        $channel->basic_publish($msg, '', RABBITMQ_QUEUE_NAME);
+    }
+} else {
+    echo "Error while creating temporary directory";
+    die();
 }
 
