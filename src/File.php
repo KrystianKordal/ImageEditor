@@ -11,7 +11,7 @@ class File
      * Get all images from directory
      * 
      * @param string $path Path to directory
-     * @param strin $main_path Path to parent directory
+     * @param strin $mainPath Path to parent directory
      * 
      * @return array Images data
      * [
@@ -21,36 +21,36 @@ class File
      *  ]
      * ]
      */
-    public static function getImagesFromDir(string $path, $main_path = null) : array
+    public static function getImagesFromDir(string $path, $mainPath = null) : array
     {
-        if (!$main_path) {
-            $main_path = $path;
+        if (!$mainPath) {
+            $mainPath = $path;
         }
         $nodes = scandir($path);
 
-        $images_paths = array();
+        $imagesPaths = array();
 
         foreach ($nodes as $node) {
             if (in_array($node, ['..', '.'])) {
                 continue;
             }
-            $node_path = $path . DIRECTORY_SEPARATOR . $node;
+            $nodePath = $path . DIRECTORY_SEPARATOR . $node;
 
-            if(is_dir($node_path)) {
-                $images_paths = array_merge($images_paths, self::getImagesFromDir($node_path, $main_path));
+            if(is_dir($nodePath)) {
+                $imagesPaths = array_merge($imagesPaths, self::getImagesFromDir($nodePath, $mainPath));
             }
 
-            if(self::isImage($node_path)) {
-                $destination = self::setWebpExtension($node_path);
-                $destination = str_replace($main_path, DOWNLOAD_DIR, $destination);
-                $images_paths[] = array(
-                    'source' => $node_path,
+            if(self::isImage($nodePath)) {
+                $destination = self::setWebpExtension($nodePath);
+                $destination = str_replace($mainPath, DOWNLOAD_DIR, $destination);
+                $imagesPaths[] = array(
+                    'source' => $nodePath,
                     'destination' => $destination
                 );
             }
         }
 
-        return $images_paths;
+        return $imagesPaths;
     }
 
     /**

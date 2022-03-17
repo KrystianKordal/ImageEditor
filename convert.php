@@ -27,19 +27,19 @@ $channel->queue_declare(
     $ticket = null
 );
 
-$upload_path = UPLOAD_DIR . 'images/image.zip';
+$uploadPath = UPLOAD_DIR . 'images/image.zip';
 
-$temp_dir = File::createTempDir();
+$tempDir = File::createTempDir();
 
-if($temp_dir) {
+if($tempDir) {
     $zipFile = new PhpZip\ZipFile();
     $zipFile
-        ->openFile($upload_path)
-        ->extractTo($temp_dir)
+        ->openFile($uploadPath)
+        ->extractTo($tempDir)
         ->close();
 
 
-    $images = File::getImagesFromDir($temp_dir);
+    $images = File::getImagesFromDir($tempDir);
     
     foreach ($images as $image) {
         $data = array(
